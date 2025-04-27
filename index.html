@@ -276,39 +276,7 @@
             width: 50px;
             height: 50px;
          border-radius: 50%;
-             }
-             
-                .bouji {
-            width: 28px;
-            height: 80px;
-            background: linear-gradient(to right, #d3a15f, #f5d6a3, #d3a15f);
-            margin: 30px auto;
-            position: relative;
-            border-radius: 5px;
         }
-        
-        .flam {
-            width: 25px;
-            height: 50px;
-            background: linear-gradient(to top, #ff7800, #ffdc00, white);
-            border-radius: 50% 50% 20% 20%;
-            position: absolute;
-            top: -50px;
-            left: 0;
-            box-shadow: 0 0 20px #ff6600, 0 0 40px #ffaa00;
-            animation: souke 0.5s infinite alternate ease-in-out;
-            transform-origin: bottom center;
-        }
-        
-        @keyframes souke {
-            0%, 100% {
-                transform: rotate(-3deg);
-            }
-            50% {
-                transform: rotate(3deg);
-            }
-        }
-      
         
         .lampe {
            margin-top 400px;
@@ -430,8 +398,8 @@ bottom: 600px;
 }
             /* Style pou bouton meni 3 ba a */
 .menu-toggle {
-  display: none; /* Pa montre sou desktop */
-  background: none;
+  display: 1; /* Pa montre sou desktop */
+  background: #3e3ede;
   border: none;
   cursor: pointer;
   padding: 10px;
@@ -443,7 +411,7 @@ bottom: 600px;
   width: 25px;
   height: 3px;
   margin: 5px 0;
-  background-color: #333;
+  background-color: white;
   transition: all 0.3s ease;
 }
 
@@ -452,9 +420,9 @@ bottom: 600px;
   position: fixed;
   top: 0;
   left: -100%;
-  width: 80%;
+  width: 60%;
   height: 100vh;
-  background-color: #fff;
+  background-color: #3e3ede;
   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
   transition: left 0.3s ease;
   z-index: 999;
@@ -474,7 +442,7 @@ bottom: 600px;
 .mobile-menu li a {
   display: block;
   padding: 15px 20px;
-  color: #333;
+  color: white;
   text-decoration: none;
   border-bottom: 1px solid #eee;
 }
@@ -532,8 +500,7 @@ bottom: 600px;
             </center>           
             <div class="fond-image1">
              <div class="lampe">
-         <div class="bouji">          
-            <div class="flam"></div>
+         <img class="freda" scr="light.png" alt="bougie allumée">
             </div>            
         </div>
           <img class="freda" src="pray.png" alt="freda">
@@ -565,7 +532,7 @@ Nous sommes ravis de vous accueillir dans notre sanctuaire en ligne, où chaque 
 <p>
 "Le monde est plein de choses invisibles, attendant d’être révélées..." Laissez-nous vous aider à trouver celle qui vous appelle.</p>
 
-<p>Par où commencer votre voyage</p>
+<p>Par où commencer votre voyage?</p>
 </div>
 <div class="image-droite">
 
@@ -582,7 +549,7 @@ Nous sommes ravis de vous accueillir dans notre sanctuaire en ligne, où chaque 
     <!-- Chatbot Container -->
     <div class="chatbot-container hidden" id="chatbotContainer">
         <div class="chatbot-header">
-            <div class="chatbot-title">Chatbot Entèlijan</div>
+            <div class="chatbot-title">Eso-Botanica</div>
             <button class="chatbot-close" id="chatbotClose">×</button>
         </div>
         
@@ -608,7 +575,7 @@ Nous sommes ravis de vous accueillir dans notre sanctuaire en ligne, où chaque 
         const languages = {
             ht: {
                 greetings: ["Bonjou", "Sali", "Alo"],
-                welcome: "Bonjou! Mwen se chatbot entèlijan ou a. Kijan mwen ka ede w jodi a?",
+                welcome: "Bonjou! Mwen se Eso-Botanica. Kijan mwen ka ede w jodi a?",
                 productQuestion: "Ki pwodwi w ap chache a?",
                 productFound: "Men pwodwi ou mande a:",
                 price: "Pri:",
@@ -628,18 +595,18 @@ Nous sommes ravis de vous accueillir dans notre sanctuaire en ligne, où chaque 
                 natcash: "NatCash",
                 submit: "Soumèt",
                 thanksNoBuy: "Mèsi pou enterè ou! Toujou vizite nou pou pwodwi kalite.",
-                horoscopeQuestion: "Di mwen yon ti kras sou tèt ou pou mwen ka fè yon vwayan smistik pou ou.",
-                horoscopeResponse: "Men sa vwayan smistik mwen an di sou ou:",
+                horoscopeQuestion: "Di mwen yon ti kras sou tèt ou pou mwen ka fè yon vwayans mistik pou ou.",
+                horoscopeResponse: "Men sa vwayans mistik mwen an di sou ou:",
                 notificationMessages: [
                     "Nou gen nouvo pwodwi ki fenk sot!",
                     "Promosyon espesyal jodi a sèlman!",
-                    "Nouvo arive nan magazen nou an!",
+                    "Nouvo pwodwi rive nan botanika nou an!",
                     "Pwodwi popilè yo an rab jodi a!"
                 ]
             },
             fr: {
                 greetings: ["Bonjour", "Salut", "Coucou"],
-                welcome: "Bonjour! Je suis votre chatbot intelligent. Comment puis-je vous aider aujourd'hui?",
+                welcome: "Bonjour! Je suis Eso-Botanica . Comment puis-je vous aider aujourd'hui?",
                 productQuestion: "Quel produit recherchez-vous?",
                 productFound: "Voici le produit que vous avez demandé:",
                 price: "Prix:",
@@ -664,13 +631,13 @@ Nous sommes ravis de vous accueillir dans notre sanctuaire en ligne, où chaque 
                 notificationMessages: [
                     "Nous avons de nouveaux produits arrivés!",
                     "Promotion spéciale aujourd'hui seulement!",
-                    "Nouveautés dans notre magasin!",
+                    "Nouveautés dans notre botanica!",
                     "Produits populaires en solde aujourd'hui!"
                 ]
             },
             es: {
                 greetings: ["Hola", "Buenos días", "¿Qué tal?"],
-                welcome: "¡Hola! Soy tu chatbot inteligente. ¿Cómo puedo ayudarte hoy?",
+                welcome: "¡Hola! Soy Eso-Botanica . ¿Cómo puedo ayudarte hoy?",
                 productQuestion: "¿Qué producto estás buscando?",
                 productFound: "Aquí está el producto que pediste:",
                 price: "Precio:",
@@ -701,7 +668,7 @@ Nous sommes ravis de vous accueillir dans notre sanctuaire en ligne, où chaque 
             },
             en: {
                 greetings: ["Hello", "Hi", "Hey"],
-                welcome: "Hello! I'm your smart chatbot. How can I help you today?",
+                welcome: "Hello! I'm Eso-Botanica. How can I help you today?",
                 productQuestion: "What product are you looking for?",
                 productFound: "Here's the product you asked for:",
                 price: "Price:",
