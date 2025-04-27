@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eso-Botanica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #3e3ede;
+            min-width: 500px;
+        }        
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .chatbot-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: var(--light-color);
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background-color: var(--accent-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            background-color: #e9ecef;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+
+        .chatbot-input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background-color: white;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chatbot-send {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .chatbot-send:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .chatbot-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .chatbot-icon img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .product-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .form-submit:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .language-btn {
+            background: none;
+            border: none;
+            margin: 0 5px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .language-btn:hover, .language-btn.active {
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .horoscope-result {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        header {
+        top: 0;
+            position: fixed;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(to top, #111, #3e3ede, #111);
+    display: flex;
+            justify-content: space-between;
+            align-items: center;        
+            font-size: 1.5em;
+            color: white;
+            }
+            
+        .oeil {
+            width: 50px;
+            height: 50px;
+         border-radius: 50%;
+             }
+             
+                .bouji {
+            width: 28px;
+            height: 80px;
+            background: linear-gradient(to right, #d3a15f, #f5d6a3, #d3a15f);
+            margin: 30px auto;
+            position: relative;
+            border-radius: 5px;
+        }
+        
+        .flam {
+            width: 25px;
+            height: 50px;
+            background: linear-gradient(to top, #ff7800, #ffdc00, white);
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: -50px;
+            left: 0;
+            box-shadow: 0 0 20px #ff6600, 0 0 40px #ffaa00;
+            animation: souke 0.5s infinite alternate ease-in-out;
+            transform-origin: bottom center;
+        }
+        
+        @keyframes souke {
+            0%, 100% {
+                transform: rotate(-3deg);
+            }
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+      
+        
+        .lampe {
+           margin-top 400px;
+            width: 80px;
+            height: 80px;
+            padding: 30px;
+            background-color: #3e3ede;
+            border-radius: 50%;
+            box-shadow: 1px 2px 0 0 white;
+        }   
+        
+        footer {
+        left: 0;
+        position: fixed;
+        bottom: 0;
+        color: white;
+        font-size: 0.5em;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(to top, #111, #3e3ede, #111);
+            line-height: 1.5;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;           
+        }
+        
+        .line {
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to top, #111, #3e3ede, #111);   
+        }
+        
+        .kouzen {
+            border-radius: 50%;
+        }
+        
+        .box {
+        color: red;
+            width: 100%;
+            height: 300px;
+            background-color: white;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            font-family: cursive;
+            font-weight: bold;
+        }
+        
+        .freda {
+           width: 250px;
+           height: 250px;
+           border-radius: 50%; 
+           margin-top: 30px;
+        }
+        
+        .fond-image1 {
+            width: 400px;
+            height: 270px;
+            background: linear-gradient(to right, #3e3ede, #f2f2f2);
+            border-radius: 50% 0 50% 0;
+            padding: 5px;
+            margin-top: 40px;
+            display: flex;
+            justify-content:  space-between;
+            align-items: center;
+        } 
+             .container1 {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            max-width: 600px;
+            margin: 10px auto;
+            padding: 20px;
+            background-color: #eee;
+            border-radius: 15% 0 0 0;
+        }
+        
+        .text-gauche {
+            width: 48%;
+        }
+        
+        .image-droit {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .imaj-bò img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .kontnè {
+                flex-direction: column;
+            }
+            
+            .tèks-bò, .imaj-bò {
+                width: 100%;
+            }
+.rit a {
+color: white;
+position: fixed;
+right: 0;
+top: 600px;
+left: 10px;
+bottom: 600px;
+    width: 35%;
+    height: 80px; 
+    background-color: rgba(255, 0, 0, 0.3);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+    </style>
+</head>
+<body>
+    
+    <header>
+        Eso-Botanica
+        <img class="oeil" src="oeil.png" alt="oeil">
+      
+    </header>
+    
+    <div class="fond-img">
+        <div class="box">
+            <center>
+            <h1>Produits<br>
+            De<br>
+            Qualité<br>
+            </h1>
+            </center>           
+            <div class="fond-image1">
+             <div class="lampe">
+         <div class="bouji">          
+            <div class="flam"></div>
+            </div>            
+        </div>
+          <img class="freda" src="pray.png" alt="freda">
+            </div>     
+    </div>            
+    <hr class="line">
+    <marquee><p style="color: #fff; font-size: 1.2em;">Acheter en toute sécurité sur notre site web. Notre assistance virtuelle est là pour vous guider. Cliquer sur l'icône au coin inferieur de l'écran pour commencer une conversation...</p></marquee>
+    </hr>
+        <div class="container1">
+            <div class="text-gauch">
+        <center><h2>Propos de Bienvenue</h2></center>
+        <p>
+        Bienvenue dans l’Antre des Mystères – Votre Boutique Mystique en Ligne</p>
+
+<p>Cher voyageur des énergies invisibles,</p>
+<p>
+Nous sommes ravis de vous accueillir dans notre sanctuaire en ligne, où chaque objet est imprégné de magie, de symboles anciens et de vibrations uniques. Que vous soyez en quête de sagesse, de protection ou simplement d’une étincelle de merveilleux, vous êtes au bon endroit.</p> 
+
+<p>Comment pouvons-nous vous guider ?</p>
+<p>
+- Découvrez nos artefacts énigmatiques (pierres, tarots, bougies, encens, etc.) grâce à notre assistance.  
+</p>
+<p>
+- Visualisez leurs images et leurs prix en un instant. 
+</p> 
+<p>
+- Passez commande en toute simplicité, comme par enchantement.
+</p>  
+<p>
+"Le monde est plein de choses invisibles, attendant d’être révélées..." Laissez-nous vous aider à trouver celle qui vous appelle.</p>
+
+<p>Par où commencer votre voyage</p>
+</div>
+<div class="image-droite">
+
+<img class ="kouzen" src="kouzen.jpg" alt="kouzen">
+    <img class ="kouzen" src="freda.jpeg" alt="freda">
+    <img class="kouzen" src="dantò.jpeg" alt="dantò">
+</div>
+   
+  <!-- Chatbot Icon -->
+    <div class="chatbot-icon" id="chatbotIcon">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="Chatbot">
+    </div>
+
+    <!-- Chatbot Container -->
+    <div class="chatbot-container hidden" id="chatbotContainer">
+        <div class="chatbot-header">
+            <div class="chatbot-title">Chatbot Entèlijan</div>
+            <button class="chatbot-close" id="chatbotClose">×</button>
+        </div>
+        
+        <div class="language-selector">
+            <button class="language-btn" data-lang="ht">HT</button>
+            <button class="language-btn" data-lang="fr">FR</button>
+            <button class="language-btn" data-lang="es">ES</button>
+            <button class="language-btn" data-lang="en">EN</button>
+        </div>
+        
+        <div class="chatbot-messages" id="chatbotMessages">
+            <!-- Messages will appear here -->
+        </div>
+        
+        <div class="chatbot-input-area">
+            <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Pose yon kesyon...">
+            <button class="chatbot-send" id="chatbotSend">➤</button>
+        </div>
+    </div>
+
+    <script>
+           // Supported languages
+        const languages = {
+            ht: {
+                greetings: ["Bonjou", "Sali", "Alo"],
+                welcome: "Bonjou! Mwen se chatbot entèlijan ou a. Kijan mwen ka ede w jodi a?",
+                productQuestion: "Ki pwodwi w ap chache a?",
+                productFound: "Men pwodwi ou mande a:",
+                price: "Pri:",
+                buyQuestion: "Eske ou ta renmen achte pwodwi sa?",
+                yes: "Wi",
+                no: "Non",
+                formTitle: "Fòmilè Acha",
+                fullName: "Non Konplè",
+                product: "Pwodwi",
+                quantity: "Kantite",
+                unitPrice: "Pri Inite",
+                totalPrice: "Pri Total",
+                phone: "Nimewo Telefòn",
+                transactionId: "ID Tranzaksyon",
+                paymentMethod: "Mòd Pèman",
+                moncash: "MonCash",
+                natcash: "NatCash",
+                submit: "Soumèt",
+                thanksNoBuy: "Mèsi pou enterè ou! Toujou vizite nou pou pwodwi kalite.",
+                horoscopeQuestion: "Di mwen yon ti kras sou tèt ou pou mwen ka fè yon vwayan smistik pou ou.",
+                horoscopeResponse: "Men sa vwayan smistik mwen an di sou ou:",
+                notificationMessages: [
+                    "Nou gen nouvo pwodwi ki fenk sot!",
+                    "Promosyon espesyal jodi a sèlman!",
+                    "Nouvo arive nan magazen nou an!",
+                    "Pwodwi popilè yo an rab jodi a!"
+                ]
+            },
+            fr: {
+                greetings: ["Bonjour", "Salut", "Coucou"],
+                welcome: "Bonjour! Je suis votre chatbot intelligent. Comment puis-je vous aider aujourd'hui?",
+                productQuestion: "Quel produit recherchez-vous?",
+                productFound: "Voici le produit que vous avez demandé:",
+                price: "Prix:",
+                buyQuestion: "Souhaitez-vous acheter ce produit?",
+                yes: "Oui",
+                no: "Non",
+                formTitle: "Formulaire d'achat",
+                fullName: "Nom Complet",
+                product: "Produit",
+                quantity: "Quantité",
+                unitPrice: "Prix Unitaire",
+                totalPrice: "Prix Total",
+                phone: "Numéro de Téléphone",
+                transactionId: "ID de Transaction",
+                paymentMethod: "Méthode de Paiement",
+                moncash: "MonCash",
+                natcash: "NatCash",
+                submit: "Soumettre",
+                thanksNoBuy: "Merci pour votre intérêt! N'hésitez pas à visiter notre site pour des produits de qualité.",
+                horoscopeQuestion: "Dites-moi un peu sur vous pour que je puisse faire une prédiction astrologique.",
+                horoscopeResponse: "Voici ce que ma prédiction astrologique dit sur vous:",
+                notificationMessages: [
+                    "Nous avons de nouveaux produits arrivés!",
+                    "Promotion spéciale aujourd'hui seulement!",
+                    "Nouveautés dans notre magasin!",
+                    "Produits populaires en solde aujourd'hui!"
+                ]
+            },
+            es: {
+                greetings: ["Hola", "Buenos días", "¿Qué tal?"],
+                welcome: "¡Hola! Soy tu chatbot inteligente. ¿Cómo puedo ayudarte hoy?",
+                productQuestion: "¿Qué producto estás buscando?",
+                productFound: "Aquí está el producto que pediste:",
+                price: "Precio:",
+                buyQuestion: "¿Te gustaría comprar este producto?",
+                yes: "Sí",
+                no: "No",
+                formTitle: "Formulario de Compra",
+                fullName: "Nombre Completo",
+                product: "Producto",
+                quantity: "Cantidad",
+                unitPrice: "Precio Unitario",
+                totalPrice: "Precio Total",
+                phone: "Número de Teléfono",
+                transactionId: "ID de Transacción",
+                paymentMethod: "Método de Pago",
+                moncash: "MonCash",
+                natcash: "NatCash",
+                submit: "Enviar",
+                thanksNoBuy: "¡Gracias por tu interés! Siempre visítanos para productos de calidad.",
+                horoscopeQuestion: "Cuéntame un poco sobre ti para que pueda hacer una predicción astrológica.",
+                horoscopeResponse: "Esto es lo que mi predicción astrológica dice sobre ti:",
+                notificationMessages: [
+                    "¡Tenemos nuevos productos recién llegados!",
+                    "¡Promoción especial solo por hoy!",
+                    "¡Novedades en nuestra tienda!",
+                    "¡Productos populares en oferta hoy!"
+                ]
+            },
+            en: {
+                greetings: ["Hello", "Hi", "Hey"],
+                welcome: "Hello! I'm your smart chatbot. How can I help you today?",
+                productQuestion: "What product are you looking for?",
+                productFound: "Here's the product you asked for:",
+                price: "Price:",
+                buyQuestion: "Would you like to purchase this product?",
+                yes: "Yes",
+                no: "No",
+                formTitle: "Purchase Form",
+                fullName: "Full Name",
+                product: "Product",
+                quantity: "Quantity",
+                unitPrice: "Unit Price",
+                totalPrice: "Total Price",
+                phone: "Phone Number",
+                transactionId: "Transaction ID",
+                paymentMethod: "Payment Method",
+                moncash: "MonCash",
+                natcash: "NatCash",
+                submit: "Submit",
+                thanksNoBuy: "Thank you for your interest! Always visit us for quality products.",
+                horoscopeQuestion: "Tell me a little about yourself so I can make an astrological prediction for you.",
+                horoscopeResponse: "Here's what my astrological prediction says about you:",
+                notificationMessages: [
+                    "We have new products just arrived!",
+                    "Special promotion today only!",
+                    "New arrivals in our store!",
+                    "Popular products on sale today!"
+                ]
+            }
+        };
+
+        // Sample product database
+        const products = {
+            ht: {
+                "bienêtre": { name: "bienêtre", price: 2000, image: "bienêtre.jpeg" },
+                "florida": { name: "florida", price: 1000, image: "florida.jpeg" },
+                "pompeia": { name: "Pompeia", price: 750, image: "ponpeia.jpeg" },
+                "hombre": { name: "hombre", price: 800, image: "hombre.jpeg" }
+            },
+            fr: {
+                "bienêtre": { name: "bienêtre", price: 1000, image: "florida.jpeg" },
+                "florida": { name: "Florida", price: 1000, image: ".jpeg" },
+                "pompeia": { name: "Pompeia", price: 800, image: "pompeia.jpeg" },
+                "hombre": { name: "Hombre", price: 800, image: "hombre " }
+            },
+            es: {
+                "bienêtre": { name: "Bienêtre ", price: 2000, image: "bienêtre.jpeg" },
+                "florida": { name: "Florida", price: 1000, image: "florida.jpeg" },
+                "pompeia": { name: "Pompeia", price: 800, image: "pompeia.jpeg" },
+                "hombre": { name: "Hombre", price: 800, image: "hombre.jpeg" }
+            },
+            en: {
+                "bienêtre": { name:"Bienêtre", price: 2000, image: "bienêtre.jpeg" },
+                "florida": { name: "Florida", price: 1000, image: "florida.jpeg" },
+                "pompeia": { name: "Pompeia", price: 800, image: "pompeia.jpeg" },
+                "hombre": { name: "Hombre", price: 1000, image: "hombre.jpeg" }
+            }
+        };
+
+        // Horoscope responses
+        const horoscopeResponses = {
+            ht: [
+                "Vwayan an montre w ap gen yon bèl opòtinite nan travay ou nan pwochen semèn nan. Ou pral rankontre yon moun ki ka chanje lavi w.",
+                "Linèt astwolojik yo di ou dwe pran prekosyon ak desizyon finansye ou yo. Chanjman ap vini, men ou kapab jere yo avèk lasajès.",
+                "Ou nan yon moman kreyatif nan lavi w. Eksprime tèt ou ak konfyans epi ou pral jwenn rekonesans ou merite.",
+                "Relasyon yo pral nan premye plan pou ou. Kominikasyon klè ak senserite pral ede ou rezoud nenpòt konfli."
+            ],
+            fr: [
+                "L'horoscope montre que vous aurez une belle opportunité professionnelle la semaine prochaine. Vous rencontrerez une personne qui pourrait changer votre vie.",
+                "Les astres indiquent que vous devez être prudent avec vos décisions financières. Des changements arrivent, mais vous pouvez les gérer avec sagesse.",
+                "Vous traversez une période créative dans votre vie. Exprimez-vous avec confiance et vous obtiendrez la reconnaissance que vous méritez.",
+                "Les relations seront au premier plan pour vous. Une communication claire et sincère vous aidera à résoudre tout conflit."
+            ],
+            es: [
+                "El horóscopo muestra que tendrás una gran oportunidad profesional la próxima semana. Conocerás a alguien que podría cambiar tu vida.",
+                "Los astros indican que debes tener cuidado con tus decisiones financieras. Se avecinan cambios, pero puedes manejarlos con sabiduría.",
+                "Estás en un momento creativo de tu vida. Exprésate con confianza y obtendrás el reconocimiento que mereces.",
+                "Las relaciones estarán en primer plano para ti. La comunicación clara y sincera te ayudará a resolver cualquier conflicto."
+            ],
+            en: [
+                "The horoscope shows you'll have a great professional opportunity next week. You'll meet someone who could change your life.",
+                "The stars indicate you should be careful with financial decisions. Changes are coming, but you can handle them wisely.",
+                "You're in a creative period of your life. Express yourself with confidence and you'll get the recognition you deserve.",
+                "Relationships will be in the spotlight for you. Clear and sincere communication will help you resolve any conflict."
+            ]
+        };
+
+        // Current state
+        let currentLanguage = 'ht';
+        let currentProduct = null;
+        let conversationState = 'idle'; // 'idle', 'awaitingProduct', 'awaitingHoroscope', 'awaitingPurchaseDecision'
+
+        // DOM elements
+        const chatbotIcon = document.getElementById('chatbotIcon');
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const chatbotClose = document.getElementById('chatbotClose');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const chatbotSend = document.getElementById('chatbotSend');
+        const languageButtons = document.querySelectorAll('.language-btn');
+
+        // Initialize chatbot
+        function initChatbot() {
+            // Show welcome message
+            addBotMessage(languages[currentLanguage].welcome);
+            
+            // Set up event listeners
+            chatbotIcon.addEventListener('click', toggleChatbot);
+            chatbotClose.addEventListener('click', toggleChatbot);
+            chatbotSend.addEventListener('click', sendMessage);
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendMessage();
+            });
+            
+            // Language buttons
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    changeLanguage(this.dataset.lang);
+                });
+            });
+            
+            // Set initial active language
+            document.querySelector(`.language-btn[data-lang="${currentLanguage}"]`).classList.add('active');
+            
+            // Start notification interval
+            setInterval(showRandomNotification, 15000);
+        }
+
+        // Toggle chatbot visibility
+        function toggleChatbot() {
+            chatbotContainer.classList.toggle('hidden');
+            chatbotIcon.classList.toggle('hidden');
+        }
+
+        // Change language
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active language button
+            languageButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.lang === lang) {
+                    button.classList.add('active');
+                }
+            });
+            
+            // Add language change message
+            addBotMessage(getLanguageChangeMessage(lang));
+        }
+
+        function getLanguageChangeMessage(lang) {
+            const langNames = {
+                'ht': 'Kreyòl Ayisyen',
+                'fr': 'Français',
+                'es': 'Español',
+                'en': 'English'
+            };
+            
+            return `Mwen konprann ou kounye a nan ${langNames[lang]}. Kijan mwen ka ede w?`;
+        }
+
+        // Add message to chat
+        function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = text;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        // Add bot message with HTML content
+        function addBotMessage(html, isHTML = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add('bot-message');
+            
+            if (isHTML) {
+                messageDiv.innerHTML = html;
+            } else {
+                messageDiv.textContent = html;
+            }
+            
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        // Send message
+        function sendMessage() {
+            const message = chatbotInput.value.trim();
+            if (message === '') return;
+            
+            // Add user message
+            addMessage(message, true);
+            chatbotInput.value = '';
+            
+            // Process message based on current state
+            if (conversationState === 'awaitingProduct') {
+                handleProductRequest(message);
+            } else if (conversationState === 'awaitingHoroscope') {
+                handleHoroscopeRequest(message);
+            } else if (conversationState === 'awaitingPurchaseDecision') {
+                handlePurchaseDecision(message);
+            } else {
+                handleGeneralMessage(message);
+            }
+        }
+
+        // Handle general message
+        function handleGeneralMessage(message) {
+            const lang = currentLanguage;
+            const lowerMessage = message.toLowerCase();
+            
+            // Check for greetings
+            if (languages[lang].greetings.some(g => lowerMessage.includes(g.toLowerCase()))) {
+                addBotMessage(`${languages[lang].greetings[0]}! ${languages[lang].welcome}`);
+                return;
+            }
+            
+            // Check for product request
+            if (lowerMessage.includes('pwodwi') || lowerMessage.includes('produit') || 
+                lowerMessage.includes('producto') || lowerMessage.includes('product')) {
+                conversationState = 'awaitingProduct';
+                addBotMessage(languages[lang].productQuestion);
+                return;
+            }
+            
+            // Check for horoscope request
+            if (lowerMessage.includes('vwayan') || lowerMessage.includes('horoscope') || 
+                lowerMessage.includes('horóscopo') || lowerMessage.includes('prediction')) {
+                conversationState = 'awaitingHoroscope';
+                addBotMessage(languages[lang].horoscopeQuestion);
+                return;
+            }
+            
+            // Default response
+            addBotMessage("Mwen pa fin konprann kesyon ou a. Èske ou ta renmen mande sou yon pwodwi oswa yon vwayan smistik?");
+        }
+
+        // Handle product request
+        function handleProductRequest(message) {
+            const lang = currentLanguage;
+            let productFound = false;
+            
+            // Search for product in current language
+            for (const [keyword, product] of Object.entries(products[lang])) {
+                if (message.toLowerCase().includes(keyword)) {
+                    currentProduct = product;
+                    productFound = true;
+                    
+                    // Show product info
+                    const productHTML = `
+                        <div>
+                            <strong>${languages[lang].productFound}</strong>
+                            <div class="product-info">
+                                <strong>${product.name}</strong>
+                                <div>${languages[lang].price} ${product.price} HTG</div>
+                                <img src="${product.image}" alt="${product.name}" class="product-image">
+                            </div>
+                        </div>
+                    `;
+                    
+                    addBotMessage(productHTML, true);
+                    
+                    // Ask if they want to buy
+                    conversationState = 'awaitingPurchaseDecision';
+                    addBotMessage(languages[lang].buyQuestion);
+                    break;
+                }
+            }
+            
+            if (!productFound) {
+                addBotMessage("Mwen pa jwenn pwodwi sa a. Èske ou ka dekri li yon lòt fason?");
+            }
+        }
+
+        // Handle horoscope request
+        function handleHoroscopeRequest(message) {
+            const lang = currentLanguage;
+            const randomResponse = horoscopeResponses[lang][Math.floor(Math.random() * horoscopeResponses[lang].length)];
+            
+            const horoscopeHTML = `
+                <div class="horoscope-result">
+                    <strong>${languages[lang].horoscopeResponse}</strong>
+                    <p>${randomResponse}</p>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            addBotMessage(horoscopeHTML, true);
+            conversationState = 'idle';
+        }
+
+        // Handle purchase decision
+        function handlePurchaseDecision(message) {
+            const lang = currentLanguage;
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes(languages[lang].yes.toLowerCase()) || 
+                lowerMessage === 'wi' || lowerMessage === 'oui' || lowerMessage === 'sí' || lowerMessage === 'yes') {
+                showPurchaseForm();
+            } else {
+                addBotMessage(languages[lang].thanksNoBuy);
+            }
+            
+            conversationState = 'idle';
+        }
+
+        // Show purchase form
+        function showPurchaseForm() {
+            const lang = currentLanguage;
+            const product = currentProduct;
+            
+            const formHTML = `
+                <div>
+                    <strong>${languages[lang].formTitle}</strong>
+                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">Non kont: BARRAIS Jameson<br>4443-5143 / 5576-9797</div>
+                    <form id="purchaseForm" action="https://formspree.io/f/mrbqbyye" method="POST">
+                        <div class="form-group">
+                            <label for="fullName">${languages[lang].fullName}</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product">${languages[lang].product}</label>
+                            <input type="text" id="product" name="product" value="${product.name}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">${languages[lang].quantity}</label>
+                            <input type="number" id="quantity" name="quantity" min="1" value="1" required onchange="calculateTotal()">
+                        </div>
+                        <div class="form-group">
+                            <label for="unitPrice">${languages[lang].unitPrice}</label>
+                            <input type="number" id="unitPrice" name="unitPrice" value="${product.price}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="totalPrice">${languages[lang].totalPrice}</label>
+                            <input type="number" id="totalPrice" name="totalPrice" value="${product.price}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">${languages[lang].phone}</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transactionId">${languages[lang].transactionId}</label>
+                            <input type="text" id="transactionId" name="transactionId" required>
+                        </div>
+                        <div class="form-group">
+                            <label>${languages[lang].paymentMethod}</label>
+                            <div>
+                                <input type="checkbox" id="moncash" name="paymentMethod" value="MonCash">
+                                <label for="moncash" style="display: inline;">${languages[lang].moncash}</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="natcash" name="paymentMethod" value="NatCash">
+                                <label for="natcash" style="display: inline;">${languages[lang].natcash}</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="form-submit">${languages[lang].submit}</button>
+                    </form>
+                </div>
+                <script>
+                    function calculateTotal() {
+                        const quantity = document.getElementById('quantity').value;
+                        const unitPrice = document.getElementById('unitPrice').value;
+                        document.getElementById('totalPrice').value = quantity * unitPrice;
+                    }
+            `;
+            
+            addBotMessage(formHTML, true);
+            
+            // Add the calculateTotal function to the window object
+            window.calculateTotal = function() {
+                const quantity = document.getElementById('quantity').value;
+                const unitPrice = document.getElementById('unitPrice').value;
+                document.getElementById('totalPrice').value = quantity * unitPrice;
+            };
+        }
+
+        // Show random notification
+        function showRandomNotification() {
+            if (chatbotContainer.classList.contains('hidden')) {
+                const lang = currentLanguage;
+                const messages = languages[lang].notificationMessages;
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.textContent = randomMessage;
+                document.body.appendChild(notification);
+                
+                // Remove notification after animation
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initChatbot);
+    </script>
+       
+    <footer>
+        ® Tout droits reservés<br>
+        barrais89@gmail.com<br>
+        Tél: +509 44435143<br>
+        
+    </footer>
+    <div class="rit">
+        <a class="rit" href="rituel.html">Traitement naturel</a>
+    </div>
+</body>
+</html>
