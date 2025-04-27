@@ -428,6 +428,75 @@ bottom: 600px;
     font-size: 1.2em;
     text-decoration: none;
 }
+            /* Style pou bouton meni 3 ba a */
+.menu-toggle {
+  display: none; /* Pa montre sou desktop */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.menu-toggle .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px 0;
+  background-color: #333;
+  transition: all 0.3s ease;
+}
+
+/* Style pou meni mobil la */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 80%;
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  transition: left 0.3s ease;
+  z-index: 999;
+  padding-top: 60px;
+}
+
+.mobile-menu.active {
+  left: 0;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-menu li a {
+  display: block;
+  padding: 15px 20px;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 1px solid #eee;
+}
+
+/* Montre meni a sèlman sou ekran piti */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  
+  .menu-toggle.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .menu-toggle.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .menu-toggle.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+                             }
     </style>
 </head>
 <body>
@@ -435,7 +504,22 @@ bottom: 600px;
     <header>
         Eso-Botanica
         <img class="oeil" src="oeil.png" alt="oeil">
-      
+      <!-- Ajoute bouton meni a kote w vle li parèt -->
+<button class="menu-toggle" aria-label="Open menu">
+  <span class="bar"></span>
+  <span class="bar"></span>
+  <span class="bar"></span>
+</button>
+
+<!-- Meni a ki pral parèt lè w klike -->
+<nav class="mobile-menu">
+  <ul>
+    <li><a href="index.html">Acceuil</a></li>
+    <li><a href="rituel.html">Traitement Naturel</a></li>
+    <li><a href="#">Projet</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
     </header>
     
     <div class="fond-img">
@@ -1016,6 +1100,33 @@ Nous sommes ravis de vous accueillir dans notre sanctuaire en ligne, où chaque 
 
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', initChatbot);
+
+        document.addEventListener('DOMContentLoaded', function() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  
+  menuToggle.addEventListener('click', function() {
+    this.classList.toggle('active');
+    mobileMenu.classList.toggle('active');
+    
+    // Anpeche defile paj la lè meni a louvri
+    if (mobileMenu.classList.contains('active')) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  });
+  
+  // Fèmen meni a lè w klike sou yon lyen
+  const menuLinks = document.querySelectorAll('.mobile-menu a');
+  menuLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      menuToggle.classList.remove('active');
+      mobileMenu.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+});
     </script>
        
     <footer>
