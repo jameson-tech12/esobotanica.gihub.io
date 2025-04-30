@@ -449,7 +449,7 @@ bottom: 600px;
 }
 
 /* Montre meni a sèlman sou ekran piti */
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .menu-toggle {
     display: block;
   }
@@ -467,7 +467,7 @@ bottom: 600px;
   }
     slideshow {
         width: 15%;
-        min-width: 768px; /* Ou ka ajiste lajè a */
+        max-width: 768px; /* Ou ka ajiste lajè a */
         margin: 0 auto;
         position: relative;
         overflow: hidden;
@@ -485,9 +485,7 @@ bottom: 600px;
         from {opacity: 0.4}
         to {opacity: 1}
     }
-    .box-slide {
-        position: relative; 
-        overflow: hidden;
+    .box-slide
         width: 80%;
         height: 200px;
         padding: 20px;
