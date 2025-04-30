@@ -12,6 +12,7 @@
             padding: 0;
             background-color: #3e3ede;
             min-width: 500px;
+            max-width: 1000px;
         }        
         :root {
             --primary-color: #4a6fa5;
@@ -448,7 +449,7 @@ bottom: 600px;
 }
 
 /* Montre meni a sèlman sou ekran piti */
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .menu-toggle {
     display: block;
   }
@@ -466,7 +467,7 @@ bottom: 600px;
   }
     slideshow {
         width: 15%;
-        max-width: 1500px; /* Ou ka ajiste lajè a */
+        min-width: 768px; /* Ou ka ajiste lajè a */
         margin: 0 auto;
         position: relative;
         overflow: hidden;
@@ -493,7 +494,7 @@ bottom: 600px;
         margin: 10px auto;
         background-color: white;
         border-radius: 10px;
-        display: none;
+ 
     }
     </style>
 </head>
